@@ -1,14 +1,12 @@
 from .testcase import *
 
 
-def grade_2d(tests: list[T], failAllOnErr: bool = False) -> float:
-    return f"{grade(tests, failAllOnErr):.2f}"
+def grade_2d(tests: list[T], failAllOnError: bool = False) -> float:
+    return f"{grade(tests, failAllOnError):.2f}"
 
 
-def grade(tests: list[T], failAllOnErr: bool = False) -> float:
+def grade(tests: list[T], failAllOnError: bool = False) -> float:
     total = 0.0
-
-    any_errors = False
 
     has_custom_eval_errors = False
 
@@ -17,17 +15,13 @@ def grade(tests: list[T], failAllOnErr: bool = False) -> float:
             case S.SUCCESS:
                 total += t.value
             case S.FAILED_UNEXPECTED_ERROR:
-                any_errors = True
-                if failAllOnErr:
+                if failAllOnError:
                     total = 0.0
                     break
             case S.FAILED_CUSTOM_FUNC_ERROR:
                 has_custom_eval_errors = True
 
         print(t.status_message)
-
-    if any_errors and failAllOnErr:
-        total = 0.0
 
     if has_custom_eval_errors:
         print("⚠️ WARNING: CUSTOM EVALUATOR ERRORED OUT. CHECK LOGS. ⚠️")

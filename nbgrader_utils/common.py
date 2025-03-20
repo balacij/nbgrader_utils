@@ -9,12 +9,12 @@ def T_float(
     value: float,
     description: str,
     code: str,
-    expectedVal: float,
+    approxExpectedValue: float,
     expectFailure: bool = False,
     ignoreErrors: bool = False,
 ) -> T:
     def within_tol(v):
-        return eq_tol(v, expectedVal)
+        return eq_tol(v, approxExpectedValue)
 
     return T(
         value,
