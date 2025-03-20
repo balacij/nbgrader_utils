@@ -7,7 +7,7 @@ def eq_tol(v: float, e: float, tol: float = 1e-4):
 
 def T_float(
     value: float,
-    msg: str,
+    description: str,
     code: str,
     expectedVal: float,
     expectFailure: bool = False,
@@ -18,7 +18,7 @@ def T_float(
 
     return T(
         value,
-        msg,
+        description,
         code,
         within_tol,
         expectedValType=float,
