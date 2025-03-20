@@ -9,9 +9,10 @@ class Status(Enum):
 
     FAILED_TYPE_CHECKING = 10
     FAILED_EXPECTED_VALUE = 11
-    FAILED_UNEXPECTED_ERROR = 12
+    FAILED_EXPECTED_FAILURE = 12
+    FAILED_UNEXPECTED_ERROR = 13
 
-    FAILED_CUSTOM_FUNC = 20
+    FAILED_CUSTOM_FUNC_UNSATISFIED = 20
     FAILED_CUSTOM_FUNC_ERROR = 21
 
 
@@ -26,7 +27,7 @@ class TestCase:
         value: float,
         description: str,
         code: str,
-        expectedVal: Optional[Any] = None,
+        expectedVal: Any = None,
         expectedValType: Optional[type] = None,
         expectFail: bool = False,
         ignoreErrs: bool = False,
@@ -45,6 +46,7 @@ class TestCase:
             assert hasattr(
                 expectedVal, "__name__"
             ), "Custom evaluation functions must have a name."
+            # TODO: Note assumption: callable expectedVal should never result in an error
         self.expectedVal = expectedVal
         self.expectFail = expectFail
 
@@ -87,6 +89,9 @@ class TestCase:
 
             return S.FAILED_UNEXPECTED_ERROR
 
+        if self.expectFail:
+            return S.FAILED_EXPECTED_FAILURE
+
         if not (self.expectedValType is None or isinstance(val, self.expectedValType)):
             return S.FAILED_TYPE_CHECKING
 
@@ -95,7 +100,7 @@ class TestCase:
                 if self.expectedVal(val):
                     return S.SUCCESS
                 else:
-                    return S.FAILED_CUSTOM_FUNC
+                    return S.FAILED_CUSTOM_FUNC_UNSATISFIED
             except Exception as e:
                 self.calculated_val = str(e)
 
@@ -118,13 +123,15 @@ class TestCase:
             case S.FAILED_TYPE_CHECKING:
                 return f"❌ {self.description}. Expected '{self.expectedValType.__name__}'-typed return value, got: {type(self.calculated_val).__name__}"
             case S.FAILED_UNEXPECTED_ERROR:
-                return f"❌ {self.description}. Unexpected error: {self.calculated_val}"
+                return f"❌ {self.description}. Found error on input '{self.code}': {self.calculated_val}"
             case S.FAILED_EXPECTED_VALUE:
                 if hasattr(self.expectedVal, "__contains__"):
                     return f"❌ {self.description}. Expected any of {self.expectedVal}, got: {self.calculated_val}"
                 else:
                     return f"❌ {self.description}. Expected '{self.expectedVal}', got: {self.calculated_val}"
-            case S.FAILED_CUSTOM_FUNC:
+            case S.FAILED_EXPECTED_FAILURE:
+                return f"❌ {self.description}. Expected error, got: {self.calculated_val}"
+            case S.FAILED_CUSTOM_FUNC_UNSATISFIED:
                 return f"❌ {self.description}. Test failed custom evaluation: {self.expectedVal.__name__}({self.code})"
             case S.FAILED_CUSTOM_FUNC_ERROR:
                 return f"‼️ {self.description}. Custom evaluation function failed with error: {self.calculated_val}"
