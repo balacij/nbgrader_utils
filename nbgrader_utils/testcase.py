@@ -30,7 +30,7 @@ class TestCase:
         expectedVal: Any = None,
         expectedValType: Optional[type] = None,
         expectFail: bool = False,
-        ignoreErrs: bool = False,
+        ignoreErrors: bool = False,
     ):
         assert value > 0.01, "All test cases should be worth at least 0.01"
         self.value = value
@@ -55,7 +55,7 @@ class TestCase:
         ), "Expected value types must be valid types."
         self.expectedValType = expectedValType
 
-        self.ignoreErrs = ignoreErrs
+        self.ignoreErrors = ignoreErrors
         self.status = None
         self.calculated_val = None
 
@@ -83,7 +83,7 @@ class TestCase:
         except Exception as e:
             self.calculated_val = f"{e} ({type(e).__name__})"
 
-            if self.expectFail or self.ignoreErrs:
+            if self.expectFail or self.ignoreErrors:
                 return S.SUCCESS
 
             return S.FAILED_UNEXPECTED_ERROR

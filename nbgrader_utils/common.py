@@ -23,5 +23,5 @@ def T_float(
         within_tol,
         expectedValType=float,
         expectFail=expectFailure,
-        ignoreErrs=ignoreErrors,
+        ignoreErrors=ignoreErrors,
     )
