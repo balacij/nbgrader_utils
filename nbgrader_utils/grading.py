@@ -4,10 +4,10 @@ from .testcase import *
 
 def grade(
     tests: list[T],
-    statusMessageFormat: Callable = simple_testcase_status_format,
-    stopOnFirstFail: bool = False,
-    zeroIfAnyError: bool = False,
-    warnOnCustomEvaluatorErrors: bool = False,
+    status_message_formatter: Callable = simple_testcase_status_format,
+    stop_on_first_fail: bool = False,
+    zero_if_any_error: bool = False,
+    warn_on_custom_evaluator_errors: bool = False,
 ) -> float:
     total = 0.0
 
@@ -18,7 +18,7 @@ def grade(
         status = t.run()
 
         try:
-            message = statusMessageFormat(status)
+            message = status_message_formatter(status)
             if message != "":
                 print(message)
         except:
@@ -34,14 +34,14 @@ def grade(
         elif status == S.FAILED_UNEXPECTED_ERROR:
             has_errors = True
 
-        if stopOnFirstFail:
+        if stop_on_first_fail:
             break
 
-    if zeroIfAnyError and has_errors:
+    if zero_if_any_error and has_errors:
         total = 0.0
         print("❌ GRADING SUITE FAILED.")
 
-    if warnOnCustomEvaluatorErrors and has_custom_eval_errors:
+    if warn_on_custom_evaluator_errors and has_custom_eval_errors:
         print("⚠️ WARNING: CUSTOM EVALUATOR ERRORED OUT. ⚠️")
 
     return total

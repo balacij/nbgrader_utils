@@ -7,20 +7,20 @@ def test_empty():
 
 
 def test_one_good():
-    total = grade([T(1.0, "True is True", "True", True, expectedValType=bool)])
+    total = grade([T(1.0, "True is True", "True", True, expect_value_type=bool)])
     assert total == 1.0
 
 
 def test_one_bad():
-    total = grade([T(1.0, "False is True", "False", True, expectedValType=bool)])
+    total = grade([T(1.0, "False is True", "False", True, expect_value_type=bool)])
     assert total == 0.0
 
 
 def test_bools():
     total = grade(
         [
-            T(1.0, "== False", "False", False, expectedValType=bool),
-            T(1.0, "== True", "False", True, expectedValType=bool),
+            T(1.0, "== False", "False", False, expect_value_type=bool),
+            T(1.0, "== True", "False", True, expect_value_type=bool),
         ]
     )
     assert total == 1.0
@@ -29,8 +29,8 @@ def test_bools():
 def test_typing():
     total = grade(
         [
-            T(1.0, "is empty list", "True", [], expectedValType=list),
-            T(1.0, "is empty list", "[]", [], expectedValType=list),
+            T(1.0, "is empty list", "True", [], expect_value_type=list),
+            T(1.0, "is empty list", "[]", [], expect_value_type=list),
         ]
     )
     assert total == 1.0
@@ -39,7 +39,7 @@ def test_typing():
 def test_error_out():
     total = grade(
         [
-            T(1.0, "1/0 is a ZeroDivisionError", "1/0", expectFail=True),
+            T(1.0, "1/0 is a ZeroDivisionError", "1/0", expect_error=True),
             T(1.0, "1/0 is 0.0", "1/0", 0.0),
         ]
     )
