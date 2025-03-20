@@ -141,6 +141,4 @@ def simple_testcase_status_format(tc: T) -> str:
         case S.INTERNAL_FAILURE_BAD_FRAME_DEPTH:
             return f"☢️ Internal failure. Could not steal appropriate variable scope."
 
-    assert (
-        False
-    ), "Incomplete status pattern match simple_testcase_status_format implementation."
+    raise ValueError("Incomplete status pattern match simple_testcase_status_format implementation.")
