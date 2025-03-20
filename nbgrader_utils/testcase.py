@@ -1,6 +1,7 @@
 from typing import Any, Optional
 from enum import Enum
 
+import sys
 
 class Status(Enum):
     SUCCESS = 1
@@ -66,8 +67,16 @@ class TestCase:
 
         val = None
         try:
-            val = eval(self.code)
+            # Get the caller *before* `grading.py`
+            frame = sys._getframe(3)
+            caller_globals = frame.f_globals
+            caller_locals = frame.f_locals
 
+            # print(f"DEBUG: caller_globals keys: {list(caller_globals.keys())}")  # Debugging
+            # print(f"DEBUG: caller_locals keys: {list(caller_locals.keys())}")  # Debugging
+
+            # Evaluate using the correct scope
+            val = eval(self.code, caller_globals, caller_locals)
             self.calculated_val = val
         except Exception as e:
             self.calculated_val = str(e)
