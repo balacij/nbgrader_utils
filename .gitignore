@@ -1,0 +1,16 @@
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
+
+build/
+dist/
+*.egg-info/
+
+__pycache__/
+.pytest_cache/
