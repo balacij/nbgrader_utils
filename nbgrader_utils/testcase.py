@@ -120,7 +120,7 @@ class TestCase:
             case S.SUCCESS:
                 return f"✅ {self.description}."
             case S.FAILED_TYPE_CHECKING:
-                return f"❌ {self.description}. Expected '{self.expectedValType.__name__}'-typed return value, got: {type(self.calculated_val).__name__}"
+                return f"❌ {self.description}. Expected {self.expectedValType.__name__}-typed value, got: {type(self.calculated_val).__name__}"
             case S.FAILED_UNEXPECTED_ERROR:
                 return f"❌ {self.description}. Found error on input '{self.code}': {self.calculated_val}"
             case S.FAILED_EXPECTED_VALUE:
