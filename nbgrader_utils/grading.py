@@ -23,7 +23,9 @@ def grade(
             if message != "":
                 print(message)
         except Exception as e:
-            print(f"⚠️ Failed to format test case status message due to error: {e}. Status={t.status}")
+            print(
+                f"⚠️ Failed to format test case status message due to error: {e}. Status={t.status}"
+            )
 
         if status == S.INTERNAL_FAILURE_BAD_FRAME_DEPTH:
             break
