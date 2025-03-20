@@ -4,13 +4,11 @@ from enum import Enum
 from .testcase import *
 
 
-def grade_2d(tests : list[T], 
-          failAllOnErr : bool = False) -> float:
+def grade_2d(tests: list[T], failAllOnErr: bool = False) -> float:
     return f"{grade(tests, failAllOnErr):.2f}"
 
 
-def grade(tests : list[T], 
-          failAllOnErr : bool = False) -> float:
+def grade(tests: list[T], failAllOnErr: bool = False) -> float:
     total = 0.0
 
     any_errors = False

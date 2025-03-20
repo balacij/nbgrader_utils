@@ -1,6 +1,6 @@
 { pkgs, lib, config, inputs, ... }:
 {
-  packages = [ pkgs.git ];
+  packages = [ pkgs.git pkgs.black ];
 
   # https://devenv.sh/languages/
   languages.python.enable = true;

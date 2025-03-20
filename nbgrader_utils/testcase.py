@@ -12,19 +12,23 @@ class Status(Enum):
     FAILED_CUSTOM_FUNC = 20
     FAILED_CUSTOM_FUNC_ERROR = 21
 
+
 S = Status
 
-class TestCase:
-    __test__ = False # stop pytest from discovering this
 
-    def __init__(self,
-                 value : float, 
-                 msg : str,
-                 code : str,
-                 expectedVal : Optional[Any] = None,
-                 expectedValType : Optional[type] = None,
-                 expectFail : bool = False,
-                 ignoreErrs : bool = False):
+class TestCase:
+    __test__ = False  # stop pytest from discovering this
+
+    def __init__(
+        self,
+        value: float,
+        msg: str,
+        code: str,
+        expectedVal: Optional[Any] = None,
+        expectedValType: Optional[type] = None,
+        expectFail: bool = False,
+        ignoreErrs: bool = False,
+    ):
         self.value = value
         self.msg = msg
         self.code = code
@@ -61,7 +65,7 @@ class TestCase:
 
             if self.expectFail or self.ignoreErrs:
                 return S.SUCCESS
-            
+
             return S.FAILED_UNEXPECTED_ERROR
 
         if not (self.expectedValType is None or isinstance(val, self.expectedValType)):
@@ -75,14 +79,16 @@ class TestCase:
                     return S.FAILED_CUSTOM_FUNC
             except Exception as e:
                 self.calculated_val = str(e)
-        
+
             return S.FAILED_CUSTOM_FUNC_ERROR
-        
-        if (hasattr(self.expectedVal, '__contains__') and val in self.expectedVal) or (val == self.expectedVal):
+
+        if (hasattr(self.expectedVal, "__contains__") and val in self.expectedVal) or (
+            val == self.expectedVal
+        ):
             return S.SUCCESS
-        
+
         return S.FAILED_EXPECTED_VALUE
-    
+
     def status_message0(self) -> Optional[str]:
         if self.status is None:
             return None
@@ -95,7 +101,7 @@ class TestCase:
             case S.FAILED_UNEXPECTED_ERROR:
                 return f"❌ {self.msg}. Unexpected error: {self.calculated_val}"
             case S.FAILED_EXPECTED_VALUE:
-                if hasattr(self.expectedVal, '__contains__'):
+                if hasattr(self.expectedVal, "__contains__"):
                     return f"❌ {self.msg}. Expected any of {self.expectedVal}, got: {self.calculated_val}"
                 else:
                     return f"❌ {self.msg}. Expected '{self.expectedVal}', got: {self.calculated_val}"
