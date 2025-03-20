@@ -25,7 +25,7 @@ def grade(tests: list[T], failAllOnErr: bool = False) -> float:
                 has_custom_eval_errors = True
 
         print(t.status_message)
-    
+
     if any_errors and failAllOnErr:
         total = 0.0
 

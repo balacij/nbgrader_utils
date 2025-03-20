@@ -3,6 +3,7 @@ from enum import Enum
 
 import sys
 
+
 class Status(Enum):
     SUCCESS = 1
 
