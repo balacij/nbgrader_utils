@@ -61,7 +61,6 @@ class TestCase:
 
     def run(self) -> Status:
         self.status = self.run0()
-        self.status_message = self.status_message0()
         return self.status
 
     def run0(self) -> Status:
@@ -112,32 +111,31 @@ class TestCase:
 
         return S.FAILED_EXPECTED_VALUE
 
-    def status_message0(self) -> Optional[str]:
-        if self.status is None:
-            return None
-
-        match self.status:
-            case S.SUCCESS:
-                return f"✅ {self.description}."
-            case S.FAILED_TYPE_CHECKING:
-                return f"❌ {self.description}. Expected {self.expectedValType.__name__}-typed value, got: {type(self.calculated_val).__name__}"
-            case S.FAILED_UNEXPECTED_ERROR:
-                return f"❌ {self.description}. Found error on input '{self.code}': {self.calculated_val}"
-            case S.FAILED_EXPECTED_VALUE:
-                if hasattr(self.expectedVal, "__contains__"):
-                    return f"❌ {self.description}. Expected any of {self.expectedVal}, got: {self.calculated_val}"
-                else:
-                    return f"❌ {self.description}. Expected '{self.expectedVal}', got: {self.calculated_val}"
-            case S.FAILED_EXPECTED_FAILURE:
-                return (
-                    f"❌ {self.description}. Expected error, got: {self.calculated_val}"
-                )
-            case S.FAILED_CUSTOM_FUNC_UNSATISFIED:
-                return f"❌ {self.description}. Test failed custom evaluation: {self.expectedVal.__name__}({self.code})"
-            case S.FAILED_CUSTOM_FUNC_ERROR:
-                return f"‼️ {self.description}. Custom evaluation function failed with error: {self.calculated_val}"
-
-        return None
-
 
 T = TestCase
+TC = TestCase
+
+
+def simple_testcase_status_format(tc: T) -> str:
+    match tc.status:
+        case S.SUCCESS:
+            return f"✅ {tc.description}."
+        case S.FAILED_TYPE_CHECKING:
+            return f"❌ {tc.description}. Expected {tc.expectedValType.__name__}-typed value, got: {type(tc.calculated_val).__name__}"
+        case S.FAILED_UNEXPECTED_ERROR:
+            return f"❌ {tc.description}. Found error on input '{tc.code}': {tc.calculated_val}"
+        case S.FAILED_EXPECTED_VALUE:
+            if hasattr(tc.expectedVal, "__contains__"):
+                return f"❌ {tc.description}. Expected any of {tc.expectedVal}, got: {tc.calculated_val}"
+            else:
+                return f"❌ {tc.description}. Expected '{tc.expectedVal}', got: {tc.calculated_val}"
+        case S.FAILED_EXPECTED_FAILURE:
+            return f"❌ {tc.description}. Expected error, got: {tc.calculated_val}"
+        case S.FAILED_CUSTOM_FUNC_UNSATISFIED:
+            return f"❌ {tc.description}. Test failed custom evaluation: {tc.expectedVal.__name__}({tc.code})"
+        case S.FAILED_CUSTOM_FUNC_ERROR:
+            return f"‼️ {tc.description}. Custom evaluation function failed with error: {tc.calculated_val}"
+
+    assert (
+        False
+    ), "Incomplete status pattern match simple_testcase_status_format implementation."

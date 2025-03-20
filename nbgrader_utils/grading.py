@@ -1,29 +1,47 @@
+from typing import Callable
 from .testcase import *
 
 
-def grade_2d(tests: list[T], failAllOnError: bool = False) -> float:
-    return f"{grade(tests, failAllOnError):.2f}"
-
-
-def grade(tests: list[T], failAllOnError: bool = False) -> float:
+def grade(
+    tests: list[T],
+    statusMessageFormat: Callable = simple_testcase_status_format,
+    stopOnFirstFail: bool = False,
+    zeroIfAnyError: bool = False,
+    warnOnCustomEvaluatorErrors: bool = False,
+) -> float:
     total = 0.0
 
     has_custom_eval_errors = False
+    has_errors = False
 
     for t in tests:
-        match t.run():
-            case S.SUCCESS:
-                total += t.value
-            case S.FAILED_UNEXPECTED_ERROR:
-                if failAllOnError:
-                    total = 0.0
-                    break
-            case S.FAILED_CUSTOM_FUNC_ERROR:
-                has_custom_eval_errors = True
+        status = t.run()
 
-        print(t.status_message)
+        try:
+            message = statusMessageFormat(status)
+            if message != "":
+                print(message)
+        except:
+            pass
 
-    if has_custom_eval_errors:
-        print("⚠️ WARNING: CUSTOM EVALUATOR ERRORED OUT. CHECK LOGS. ⚠️")
+        if status == S.SUCCESS:
+            total += t.value
+            continue
+
+        if status == S.FAILED_CUSTOM_FUNC_ERROR:
+            has_custom_eval_errors = True
+            has_errors = True
+        elif status == S.FAILED_UNEXPECTED_ERROR:
+            has_errors = True
+
+        if stopOnFirstFail:
+            break
+
+    if zeroIfAnyError and has_errors:
+        total = 0.0
+        print("❌ GRADING SUITE FAILED.")
+
+    if warnOnCustomEvaluatorErrors and has_custom_eval_errors:
+        print("⚠️ WARNING: CUSTOM EVALUATOR ERRORED OUT. ⚠️")
 
     return total

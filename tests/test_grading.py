@@ -45,15 +45,34 @@ def test_error_out():
     )
     assert total == 1.0
 
+
 def test_any_of():
     def one_of_first_three(v):
-        return v in {1,2,3}
-    
+        return v in {1, 2, 3}
+
     total = grade(
         [
-            T(1.0, "1 is one of the first three positive integers (set-based)", "1", {1,2,3}, int),
-            T(1.0, "1 is one of the first three positive integers (list-based)", "1", [1,2,3], int),
-            T(1.0, "1 is one of the first three positive integers (list-based)", "1", one_of_first_three, int),
+            T(
+                1.0,
+                "1 is one of the first three positive integers (set-based)",
+                "1",
+                {1, 2, 3},
+                int,
+            ),
+            T(
+                1.0,
+                "1 is one of the first three positive integers (list-based)",
+                "1",
+                [1, 2, 3],
+                int,
+            ),
+            T(
+                1.0,
+                "1 is one of the first three positive integers (list-based)",
+                "1",
+                one_of_first_three,
+                int,
+            ),
         ]
     )
     assert total == 3.0
