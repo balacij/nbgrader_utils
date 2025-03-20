@@ -75,14 +75,13 @@ class TestCase:
             caller_globals = frame.f_globals
             caller_locals = frame.f_locals
 
-            # print(f"DEBUG: caller_globals keys: {list(caller_globals.keys())}")  # Debugging
-            # print(f"DEBUG: caller_locals keys: {list(caller_locals.keys())}")  # Debugging
+            # print(f"DEBUG: caller_globals keys: {list(caller_globals.keys())}")
+            # print(f"DEBUG: caller_locals keys: {list(caller_locals.keys())}")
 
-            # Evaluate using the correct scope
             val = eval(self.code, caller_globals, caller_locals)
             self.calculated_val = val
         except Exception as e:
-            self.calculated_val = str(e)
+            self.calculated_val = f"{e} ({type(e).__name__})"
 
             if self.expectFail or self.ignoreErrs:
                 return S.SUCCESS
@@ -130,7 +129,9 @@ class TestCase:
                 else:
                     return f"❌ {self.description}. Expected '{self.expectedVal}', got: {self.calculated_val}"
             case S.FAILED_EXPECTED_FAILURE:
-                return f"❌ {self.description}. Expected error, got: {self.calculated_val}"
+                return (
+                    f"❌ {self.description}. Expected error, got: {self.calculated_val}"
+                )
             case S.FAILED_CUSTOM_FUNC_UNSATISFIED:
                 return f"❌ {self.description}. Test failed custom evaluation: {self.expectedVal.__name__}({self.code})"
             case S.FAILED_CUSTOM_FUNC_ERROR:
