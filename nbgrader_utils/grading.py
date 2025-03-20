@@ -8,6 +8,7 @@ def grade(
     stop_on_first_fail: bool = False,
     zero_if_any_error: bool = False,
     warn_on_custom_evaluator_errors: bool = False,
+    python_frame_depth: int = 4,
 ) -> float:
     total = 0.0
 
@@ -15,14 +16,17 @@ def grade(
     has_errors = False
 
     for t in tests:
-        status = t.run()
+        status = t.run(python_frame_depth)
 
         try:
-            message = status_message_formatter(status)
+            message = status_message_formatter(t)
             if message != "":
                 print(message)
-        except:
-            pass
+        except Exception as e:
+            print(f"⚠️ Failed to format test case status message due to error: {e}. Status={t.status}")
+
+        if status == S.INTERNAL_FAILURE_BAD_FRAME_DEPTH:
+            break
 
         if status == S.SUCCESS:
             total += t.value

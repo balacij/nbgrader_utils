@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 DESCRIPTION = "My first Python package"
 LONG_DESCRIPTION = "My first Python package with a slightly longer description"
 

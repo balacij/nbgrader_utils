@@ -1,7 +1,7 @@
 from typing import Any, Callable, Optional
 from enum import Enum
 
-import sys
+from .scope import steal_scope
 
 
 class Status(Enum):
@@ -14,6 +14,8 @@ class Status(Enum):
 
     FAILED_CUSTOM_FUNC_UNSATISFIED = 20
     FAILED_CUSTOM_FUNC_ERROR = 21
+
+    INTERNAL_FAILURE_BAD_FRAME_DEPTH = 30
 
 
 S = Status
@@ -59,25 +61,24 @@ class TestCase:
         self.status = None
         self.calculated_val = None
 
-    def run(self) -> Status:
-        self.status = self.run0()
+    def run(self, python_frame_depth: int = 3) -> Status:
+        self.status = self.run0(python_frame_depth)
         return self.status
 
-    def run0(self) -> Status:
-        if self.status is not None:
-            return self.status
+    def run0(self, python_frame_depth: int = 3) -> Status:
+        context_globals, context_locals = None, None
+        try:
+            # Get the scope of the runtime context
+            context_globals, context_locals = steal_scope(
+                python_frame_depth, exact=True
+            )
+        except Exception as e:
+            self.calculated_val = f"{e} ({type(e).__name__})"
+            return S.INTERNAL_FAILURE_BAD_FRAME_DEPTH
 
         val = None
         try:
-            # Get the caller *before* `grading.py`
-            frame = sys._getframe(3)
-            caller_globals = frame.f_globals
-            caller_locals = frame.f_locals
-
-            # print(f"DEBUG: caller_globals keys: {list(caller_globals.keys())}")
-            # print(f"DEBUG: caller_locals keys: {list(caller_locals.keys())}")
-
-            val = eval(self.code, caller_globals, caller_locals)
+            val = eval(self.code, context_globals, context_locals)
             self.calculated_val = val
         except Exception as e:
             self.calculated_val = f"{e} ({type(e).__name__})"
@@ -137,6 +138,8 @@ def simple_testcase_status_format(tc: T) -> str:
             return f"❌ {tc.description}. Test failed custom evaluation: {tc.expected_value.__name__}({tc.code})"
         case S.FAILED_CUSTOM_FUNC_ERROR:
             return f"‼️ {tc.description}. Custom evaluation function failed with error: {tc.calculated_val}"
+        case S.INTERNAL_FAILURE_BAD_FRAME_DEPTH:
+            return f"☢️ Internal failure. Could not steal appropriate variable scope."
 
     assert (
         False
