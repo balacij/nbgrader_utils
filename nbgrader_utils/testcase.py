@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 from enum import Enum
 
 import sys
@@ -27,7 +27,7 @@ class TestCase:
         value: float,
         description: str,
         code: str,
-        expect_value: Any = None,
+        expect_value: Any | Callable[[Any], bool] = None,
         expect_value_type: Optional[type] = None,
         expect_error: bool = False,
         ignore_errors: bool = False,

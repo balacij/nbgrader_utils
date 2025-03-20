@@ -4,7 +4,7 @@ from .testcase import *
 
 def grade(
     tests: list[T],
-    status_message_formatter: Callable = simple_testcase_status_format,
+    status_message_formatter: Callable[[S], str] = simple_testcase_status_format,
     stop_on_first_fail: bool = False,
     zero_if_any_error: bool = False,
     warn_on_custom_evaluator_errors: bool = False,
