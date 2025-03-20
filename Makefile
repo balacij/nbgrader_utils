@@ -1,7 +1,7 @@
 .PHONY: test
 test:
-	pytest
+	@pytest
 
 .PHONY: format fmt
 format fmt:
-	black .
+	@black .
