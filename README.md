@@ -11,7 +11,7 @@ this package), then install this package:
 
 ## Quick Start
 
-Create a fresh assignment with nbgrader, and end an auto-graded test cell with
+Create a fresh assignment with nbgrader and end an auto-graded test cell with
 the following code:
 ```python
 from nbgrader_utils import T, grade

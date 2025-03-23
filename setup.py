@@ -1,12 +1,10 @@
 from setuptools import setup, find_packages
 
 VERSION = "0.2.0"
-DESCRIPTION = "My first Python package"
-LONG_DESCRIPTION = "My first Python package with a slightly longer description"
+DESCRIPTION = "Supplement nbgrader with unit-test-based partial grading."
+LONG_DESCRIPTION = "A small utility library for unit testing student-submitted code. Intended for use with nbgrader, but not strictly necessary."
 
-# Setting up
 setup(
-    # the name must match the folder name 'verysimplemodule'
     name="nbgrader_utils",
     version=VERSION,
     author="Jason Balaci",
